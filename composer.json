@@ -13,8 +13,11 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0",
         "laravel/framework": "^7.24",
+        "laravel/nexmo-notification-channel": "^2.4",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^2.2"
+        "laravel/ui": "^2.2",
+        "nexmo/client": "^2.4",
+        "nexmo/laravel": "^2.3"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

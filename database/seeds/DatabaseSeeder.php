@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(UserSeeder::class);
         factory(User::class, 5)->create()->each(function ($user) {
                 $user->messagesFrom()->save(factory(Message::class)->make());
-            });
+            }); 
 
             // factory(Message::class, 5)->create();
     }

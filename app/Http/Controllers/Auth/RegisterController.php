@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\NewUserHasRegisteredEvent;
 use App\Http\Controllers\Controller;
 use App\Mail\WelcomeMail;
+use App\Notifications\WelcomeNotification;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Nexmo\Laravel\Facade\Nexmo;
 
 class RegisterController extends Controller
 {
@@ -54,6 +57,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone_number' => ['required'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -69,9 +73,26 @@ class RegisterController extends Controller
         $user =  User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone_number' => $data['phone_number'],
             'password' => Hash::make($data['password']),
         ]);
-        $recipient = Mail::to($user->email)->send(new WelcomeMail());
+
+        /** dispatch an event after registeration */
+        // event(new NewUserHasRegisteredEvent($user));
+
+        /** alternative way to dispatch an event using the dispatchable trait on the event class.*/
+        //  NewUserHasRegisteredEvent::dispatch($user);
+
+        /**sending sms via Nexmo api */
+        Nexmo::message()->send([
+            'to'   => $data['phone_number'],
+            'from' => '2348168266555',
+            'text' => 'Hi, thanks for signing up on Message_sys!.'
+        ]);
+
+         // sending notification to users
+        $user->notify(new WelcomeNotification($user));
+
         return $user;
 
     }

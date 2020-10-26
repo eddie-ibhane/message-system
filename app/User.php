@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','phone_number'
     ];
 
     /**
@@ -40,4 +40,9 @@ class User extends Authenticatable
     // public function messagesFrom(){
     //     return $this->hasMany('App\Models\Message', 'user_id_from' );
     // }
+
+    public function routeNotificationForNexmo($notification)
+    {
+        return $this->phone_number;
+    }
 }

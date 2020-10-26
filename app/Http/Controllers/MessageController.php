@@ -22,7 +22,6 @@ class MessageController extends Controller
     public function index()
     {
         $messages = Message::with('userFrom')->where('user_id_to', Auth::id())->notDeleted()->get();
-        $authUser = Auth::user();
         return view('home', compact('messages'));
     }
 
@@ -41,7 +40,7 @@ class MessageController extends Controller
         if($subject !== '') $subject = 'Re: '. $subject;
 
         // dd($users);
-        return view('create', compact(['users', 'subject']));
+        return view('create', compact(['users', 'subject'])); 
     }
 
     /**
